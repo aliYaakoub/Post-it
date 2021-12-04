@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { auth } from '../firebase';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail } from '@firebase/auth';
-import { collection, addDoc, getDocs, query, where } from '@firebase/firestore';
+import { collection, addDoc } from '@firebase/firestore';
 import { projectFireStore } from './../firebase';
 
 const AuthContext = React.createContext();
@@ -17,8 +17,8 @@ export function AuthProvider({children}) {
 
     async function signup(email, password){
         await createUserWithEmailAndPassword(auth, email, password);
-        const collectionRef = collection(projectFireStore, 'users');
-        addDoc(collectionRef, {username: email.split('@')[0], email: email});
+        // const collectionRef = collection(projectFireStore, 'users');
+        // addDoc(collectionRef, {username: email.split('@')[0], email: email});
         return
     }
 
@@ -50,6 +50,11 @@ export function AuthProvider({children}) {
         currentUser.updatePassword(password);
     }
 
+    async function postContent(username, content){
+        const collectionRef = collection(projectFireStore, 'posts');
+        await addDoc(collectionRef, {username: username, content: content})
+    }
+
     useEffect(()=>{
         const unsub = onAuthStateChanged(auth, (user)=>{
             setCurrentUser(user);
@@ -66,7 +71,8 @@ export function AuthProvider({children}) {
         logout,
         resetPassword,
         updateEmail,
-        updatePassword
+        updatePassword,
+        postContent
     }
 
     return (
