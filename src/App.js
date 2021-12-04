@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import Navbar from './component/Navbar';
+import Posts from './component/Posts';
+import Login from './component/Login';
+import Register from './component/Register';
+import './App.scss';
+import Settings from './component/Settings';
 
-function App() {
+const App = () => {
+
+  const [user, setUser] = useState(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen relative">
+      {isLoggingIn && <Login setUser={setUser} setIsLoggingIn={setIsLoggingIn} isLoggingIn={isLoggingIn} />}
+      {isRegistering && <Register setUser={setUser} setIsRegistering={setIsRegistering} isRegistering={isRegistering} />}
+      {openSettings && <Settings username={user.username} openSettings={openSettings} setOpenSettings={setOpenSettings} />}
+      <Navbar user={user} setIsLoggingIn={setIsLoggingIn} setIsRegistering={setIsRegistering} setOpenSettings={setOpenSettings} />
+      <Posts />
     </div>
   );
 }
