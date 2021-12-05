@@ -52,7 +52,7 @@ const Register = ({setIsRegistering}) => {
 
     return (
         <div className={`w-screen transition duration-300 h-screen fixed z-50 bg-black bg-opacity-${bgOpacity} flex items-center justify-center`}>
-            <div style={style} className={`w-96 transition bg-white rounded-lg p-5 relative`}>
+            <div style={style} className={`w-96 transition bg-white mx-5 rounded-lg p-5 relative`}>
                 <span className='absolute top-3 right-5 cursor-pointer' onClick={()=>setIsRegistering(false)}>&#10005;</span>
                 <div className='my-5'>
                     <label htmlFor="email" className='font-semibold text-lg'>Email : </label>

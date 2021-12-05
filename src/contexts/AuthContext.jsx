@@ -1,8 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { auth } from '../firebase';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail } from '@firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail, updatePassword, updateEmail } from '@firebase/auth';
 import { collection, addDoc } from '@firebase/firestore';
 import { projectFireStore } from './../firebase';
+import { Timestamp } from '@firebase/firestore';
 
 const AuthContext = React.createContext();
 
@@ -42,17 +43,17 @@ export function AuthProvider({children}) {
         return sendPasswordResetEmail(auth, email)
     }
 
-    function updateEmail(email){
-        currentUser.updateEmail(email);
+    function updateEmailFunc(email){
+        return updateEmail(currentUser, email);
     }
 
-    function updatePassword(password){
-        currentUser.updatePassword(password);
+    function updatePasswordFunc(password){
+        return updatePassword(currentUser, password)
     }
 
     async function postContent(username, content){
         const collectionRef = collection(projectFireStore, 'posts');
-        await addDoc(collectionRef, {username: username, content: content})
+        await addDoc(collectionRef, {username: username, content: content, timeStamp: Timestamp.now()})
     }
 
     useEffect(()=>{
@@ -70,8 +71,8 @@ export function AuthProvider({children}) {
         login,
         logout,
         resetPassword,
-        updateEmail,
-        updatePassword,
+        updateEmailFunc,
+        updatePasswordFunc,
         postContent
     }
 
