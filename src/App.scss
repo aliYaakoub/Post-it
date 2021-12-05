@@ -1,0 +1,76 @@
+body{
+  background: url(./images/bg.jpg) fixed;
+  background-size: cover;
+}
+.btn-login{
+  position: relative;
+  z-index: 1;
+  color: white;
+  background: black;
+  transition: box-shadow 0.2s;
+  &:hover{
+    box-shadow: 0 0 5px black;
+  }
+}
+.btn-logout{
+  position: relative;
+  z-index: 1;
+  color: white;
+  background: rgb(255, 0, 0);
+  transition: box-shadow 0.2s;
+  &:hover{
+    box-shadow: 0 0 5px red;
+  }
+}
+
+.form-input{
+  transition: box-shadow 0.2s;
+  outline: 0;
+  &:focus{
+    box-shadow: 0 0 5px black;
+  }
+}
+
+.file-input{
+  display: none;
+}
+.file-label{
+  cursor: pointer;
+  width: 100%;
+  transition: box-shadow 0.2s;
+  outline: 0;
+  &:focus{
+    box-shadow: 0 0 5px black;
+  }
+  &::content{
+    box-shadow: 0 0 5px black;
+  }
+  &:hover{
+    box-shadow: 0 0 5px black;
+  }
+}
+
+.post-card{
+  width: 100%;
+  max-width: 800px;
+  & img{
+    max-width: 100%;
+  }
+  @media screen and (max-width: 760px) {
+    & img{
+      max-width: 100%;
+    }
+  }
+}
+
+.inner-shadow{
+  box-shadow: inset 0 0 5px black;
+}
+
+.outer-shadow{
+  box-shadow: 0 0 5px black;
+}
+
+.filter-div{
+  max-width: 500px;
+}

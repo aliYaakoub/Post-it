@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from './component/Navbar';
 import Posts from './component/Posts';
 import Login from './component/Login';
@@ -7,6 +7,8 @@ import './App.scss';
 import Settings from './component/Settings';
 import { AuthProvider } from './contexts/AuthContext';
 import NewPost from './component/NewPost';
+import Filters from './component/Filters';
+import UserPosts from './component/UserPosts';
 
 const App = () => {
 
@@ -14,6 +16,17 @@ const App = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [newPost, setNewPost] = useState(false);
+  const [usernameFilter, setUsernameFilter] = useState('');
+  const [showFiltered, setShowFiltered] = useState(false);
+
+  useEffect(()=>{
+    if(usernameFilter.length === 0){
+      setShowFiltered(false)
+    }
+    else{
+      setShowFiltered(true)
+    }
+  },[usernameFilter])
 
   return (
     <AuthProvider>
@@ -23,7 +36,8 @@ const App = () => {
         {openSettings && <Settings setOpenSettings={setOpenSettings} />}
         {newPost && <NewPost setNewPost={setNewPost} />}
         <Navbar setIsLoggingIn={setIsLoggingIn} setIsRegistering={setIsRegistering} setOpenSettings={setOpenSettings} setNewPost={setNewPost} />
-        <Posts />
+        <Filters usernameFilter={usernameFilter} setUsernameFilter={setUsernameFilter} />
+        {showFiltered ? <UserPosts usernameFilter={usernameFilter} /> : <Posts />}
       </div>
     </AuthProvider>
   );
