@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext';
-// import ProgressBar from './ProgressBar';
+import { motion } from 'framer-motion';
+import { createUserWithEmailAndPassword } from '@firebase/auth';
 
 const Settings = ({setOpenSettings}) => {
     
     const [bgOpacity, setBgOpacity] = useState('0');
-    // const [file, setFile] = useState(null);
-    // const [fileToUpload, setFileToUpload] = useState(null);
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [errMsg, setErrMsg] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
 
-    // const types = ['image/png','image/jpeg','image/jpg'];
-
-    const { logout } = useAuth();
+    const { logout, updatePasswordFunc } = useAuth();
 
     useEffect(()=>{
         setBgOpacity('80')
@@ -24,24 +25,51 @@ const Settings = ({setOpenSettings}) => {
         setOpenSettings(false);
     }
 
-    // function uploadProfilePic(e) {
-    //     e.preventDefault();
-    //     if(file && types.includes(file.type)){
-    //         setFileToUpload(file)
-    //     }
-    // }
+    async function resetPassword(){
+        setErrMsg('');
+        if(password.length < 6){
+            return setErrMsg('password must be more than 6 characters')
+        }
+        await updatePasswordFunc(password);
+        setSuccessMsg('updated');
+    }
 
     return (
         <div className={`fixed transition duration-300 w-screen h-screen z-50 bg-black top-0 left-0 bg-opacity-${bgOpacity} flex items-center justify-center`}>
-            <div className={`border relative bg-white rounded-lg h-96 w-96 p-5 top-0 right-0`}>
+            <motion.div 
+                className={`border relative bg-white rounded-lg h-96 w-96 p-5 top-0 right-0 mx-5`}
+                initial={{y: '-100vh'}}
+                animate={{y: '0vh'}}
+            >
                 <span className='absolute top-3 right-5 cursor-pointer' onClick={()=>setOpenSettings(false)}>&#10005;</span>
-                {/* <form onSubmit={(e)=>uploadProfilePic(e)}>
-                    <input type="file" name='file' id='file' onChange={(e)=>setFile(e.target.files[0])} />
-                    {fileToUpload && <ProgressBar file={fileToUpload} setFileToUpload={setFileToUpload} setFile={setFile} path='profile-pictures' />}
-                    <button className='my-5 w-full border-2 border-black py-2 btn-login'>submit</button>
-                </form> */}
-                <span onClick={()=>handleLogout()}>Logout</span>
-            </div>
+                <button onClick={()=>handleLogout()} className='my-5 w-full py-2 btn-logout'>Logout</button>
+                <div className='my-5'>
+                    <label htmlFor="password" className='font-semibold text-lg'>Reset your Password : </label>
+                    <input
+                        type={showPassword ? 'text' : 'password'}
+                        name='password'
+                        id='password'
+                        value={password}
+                        placeholder='Enter your a new password'
+                        className='w-full border-2 border-black h-10 px-3 my-3 form-input'
+                        onChange={(e)=>setPassword(e.target.value)}
+                    />
+                    <div className='flex items-center mx-1'>
+                        <input 
+                            type="checkbox" 
+                            name="showPassword" 
+                            id="showPassword" 
+                            className='cursor-pointer'
+                            checked={showPassword}
+                            onChange={(e)=>setShowPassword(e.target.checked)} 
+                        />
+                        <label htmlFor='showPassword' className='px-2 cursor-pointer'>Show Password</label>
+                    </div>
+                    {errMsg && <p className='text-center text-red-500'>{errMsg}</p>}
+                    {successMsg && <p className='text-center text-green-400'>{successMsg}</p>}
+                    <button onClick={()=>resetPassword()} className='my-5 w-full border-2 border-black py-2 btn-login'>Reset</button>
+                </div>
+            </motion.div>
         </div>
     )
 }
