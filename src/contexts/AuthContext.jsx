@@ -1,9 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { auth } from '../firebase';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail, updatePassword, updateEmail } from '@firebase/auth';
-import { collection, addDoc } from '@firebase/firestore';
-import { projectFireStore } from './../firebase';
+import { collection, addDoc, deleteDoc, doc } from '@firebase/firestore';
+import { projectFireStore, projectStorage } from './../firebase';
 import { Timestamp } from '@firebase/firestore';
+import { ref, deleteObject } from '@firebase/storage';
 
 const AuthContext = React.createContext();
 
@@ -65,6 +66,19 @@ export function AuthProvider({children}) {
         return unsub;
     }, [])
 
+    async function deletePost(id, fileName){
+        try{
+            if(fileName){
+                const imageRef = ref(projectStorage, `posts/${fileName}`);
+                await deleteObject(imageRef)
+            }
+            await deleteDoc(doc(projectFireStore,'posts',id));
+        }
+        catch(err){
+            return 'could not delete post';
+        }
+    }
+
     const value = {
         currentUser: loading ? null : currentUser,
         signup,
@@ -73,7 +87,8 @@ export function AuthProvider({children}) {
         resetPassword,
         updateEmailFunc,
         updatePasswordFunc,
-        postContent
+        postContent,
+        deletePost
     }
 
     return (

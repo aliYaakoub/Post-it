@@ -4,6 +4,7 @@ import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 const useFirestore = (col, order) =>{
     const [docs, setDocs] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
         const q = query(collection(projectFireStore, col), orderBy('timeStamp', order));
@@ -14,10 +15,11 @@ const useFirestore = (col, order) =>{
                 });
                 setDocs(documents);
             })
+        setLoading(false)
         return () => unsub();
     }, [col, order])
 
-    return { docs };
+    return { docs, loading };
 }
 
 export default useFirestore;

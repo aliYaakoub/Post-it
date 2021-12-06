@@ -27,7 +27,16 @@ const useStorage = (file, path, username, content, type) =>{
         async ()=>{
             const url = await getDownloadURL(uploadTask.snapshot.ref)
             if(path === 'posts'){
-                addDoc(collectionRef, {attachment: url, username: username, content: content, timeStamp: Timestamp.now(), attachmentType: type});
+                addDoc(collectionRef, {
+                    username: username, 
+                    timeStamp: Timestamp.now(), 
+                    content: content, 
+                    attachment: {
+                        file: url, 
+                        attachmentType: type, 
+                        fileName: file.name
+                    }
+                });
             }
             setUrl(url);
         });
