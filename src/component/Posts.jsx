@@ -57,7 +57,7 @@ const Posts = () => {
                             >
                                 Back
                             </motion.p>
-                            <img className='h-full ring-1 ring-gray-700 rounded-lg' src={featuredImg} alt="" />
+                            <img className=' max-h-full ring-1 ring-gray-700 rounded-lg' src={featuredImg} alt="" />
                         </motion.div>}
                         <motion.div
                             className='flex flex-row post-card text-white justify-end'
