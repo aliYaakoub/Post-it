@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
-import { createUserWithEmailAndPassword } from '@firebase/auth';
 
 const Settings = ({setOpenSettings}) => {
     
@@ -37,7 +36,7 @@ const Settings = ({setOpenSettings}) => {
     return (
         <div className={`fixed transition duration-300 w-screen h-screen z-50 bg-black top-0 left-0 bg-opacity-${bgOpacity} flex items-center justify-center`}>
             <motion.div 
-                className={`border relative bg-white rounded-lg h-96 w-96 p-5 top-0 right-0 mx-5`}
+                className={`border relative bg-white rounded-lg w-96 p-5 top-0 right-0 mx-5`}
                 initial={{y: '-100vh'}}
                 animate={{y: '0vh'}}
             >
@@ -67,7 +66,7 @@ const Settings = ({setOpenSettings}) => {
                     </div>
                     {errMsg && <p className='text-center text-red-500'>{errMsg}</p>}
                     {successMsg && <p className='text-center text-green-400'>{successMsg}</p>}
-                    <button onClick={()=>resetPassword()} className='my-5 w-full border-2 border-black py-2 btn-login'>Reset</button>
+                    <button onClick={()=>resetPassword()} className='mt-5 w-full border-2 border-black py-2 btn-login'>Reset Password</button>
                 </div>
             </motion.div>
         </div>

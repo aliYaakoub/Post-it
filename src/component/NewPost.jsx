@@ -23,8 +23,10 @@ const NewPost = ({setNewPost}) => {
 
     async function handlePost(){
         setErrMsg('')
-        if(content.length < 1){
-            return setErrMsg('post content should not be empty')
+        if(!file){
+            if(content.length < 1){
+                return setErrMsg('you can\'t create an empty post')
+            }
         }
         setLoading(true);
         try{
@@ -50,7 +52,7 @@ const NewPost = ({setNewPost}) => {
             <div className={`border relative bg-white rounded-lg flex flex-col w-full md:w-2/4 py-5 px-10 top-0 right-0`}>
                 <span className='absolute top-3 right-5 cursor-pointer' onClick={()=>setNewPost(false)}>&#10005;</span>
                 <div className='flex flex-col mb-5'>
-                    <label htmlFor="content" className='pb-5' >What do you want to say ? <span className='text-red-500'>*</span></label>
+                    <label htmlFor="content" className='pb-5' >What do you want to say ?</label>
                     <textarea 
                         type="text" 
                         id='content' 
