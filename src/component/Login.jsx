@@ -101,8 +101,8 @@ const Login = ({setIsLoggingIn}) => {
                         <label htmlFor='showPassword' className='px-2 cursor-pointer'>Show Password</label>
                     </div>
                 </div>
-                <p className='text-center underline text-blue-500 cursor-pointer' onClick={()=>setForgotPassword(true)}>Forgot Password ?</p>
                 {errMessage ? <p className='text-center text-red-600'>{errMessage}</p> : null}
+                <p className='text-center underline text-blue-500 cursor-pointer' onClick={()=>setForgotPassword(true)}>Forgot Password ?</p>
                 <button disabled={loading} onClick={()=>handleSubmit()} className='my-5 w-full border-2 border-black py-2 btn-login'>Login</button>
             </div>
             {forgotPassword && 
