@@ -8,7 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useInView } from 'react-intersection-observer';
 import useComments from './../hooks/useComments';
 
-const PostCard = ({post, setFeaturedImg, setPostId}) => {
+const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes}) => {
     
     const [errMsg, setErrMsg] = useState('');
     
@@ -125,7 +125,7 @@ const PostCard = ({post, setFeaturedImg, setPostId}) => {
                             <AiOutlineLike size='30' className='cursor-pointer' onClick={()=>handleLike()} />
                         </motion.div>
                     }
-                    <p className='px-2'>{post.likes.length}</p>
+                    <p onClick={()=>setPostLikes(post.likes)} className='px-2 cursor-pointer'>{post.likes.length}</p>
                 </span>
                 <span className="px-5 flex items-center">
                     <BiCommentDetail size='30' className='cursor-pointer' onClick={()=>setPostId(post.id)} />

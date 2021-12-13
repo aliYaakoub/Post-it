@@ -5,6 +5,7 @@ import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { IoIosArrowDown } from 'react-icons/io';
 import { motion } from 'framer-motion';
 import Comments from './Comments';
+import Likes from './Likes';
 
 const Posts = () => {
 
@@ -16,6 +17,7 @@ const Posts = () => {
     const limitInc = 5;
     const [featuredImg, setFeaturedImg] = useState('')
     const [postId, setPostId] = useState('');
+    const [postLikes, setPostLikes] = useState([]);
 
     const { docs, loading } =  useFirestore('posts', order);
 
@@ -74,7 +76,7 @@ const Posts = () => {
                             </p>
                         </motion.div>
                         {filtered && filtered.map(post=>(
-                            <PostCard setPostId={setPostId} post={post} key={post.id} setFeaturedImg={setFeaturedImg} />
+                            <PostCard setPostLikes={setPostLikes} setPostId={setPostId} post={post} key={post.id} setFeaturedImg={setFeaturedImg} />
                         ))}
                         {filtered.length === max ?
                             null
@@ -82,6 +84,7 @@ const Posts = () => {
                             <AiOutlinePlusCircle size='50' className="mx-auto text-green-400 my-10 cursor-pointer" onClick={()=>setLimit(limit+limitInc)}/>
                         }
                         {postId && <Comments setPostId={setPostId} postId={postId} />}
+                        {postLikes.length !== 0  && <Likes setPostLikes={setPostLikes} postLikes={postLikes} />}
                     </motion.div>
             }
         </>
