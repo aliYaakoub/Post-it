@@ -4,6 +4,7 @@ import useFirestore from '../hooks/useFirestore';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { IoIosArrowDown } from 'react-icons/io';
 import { motion } from 'framer-motion';
+import Comments from './Comments';
 
 const Posts = () => {
 
@@ -14,6 +15,7 @@ const Posts = () => {
     const filtered = posts.slice(0 , 1 * limit);
     const limitInc = 5;
     const [featuredImg, setFeaturedImg] = useState('')
+    const [postId, setPostId] = useState('');
 
     const { docs, loading } =  useFirestore('posts', order);
 
@@ -43,8 +45,7 @@ const Posts = () => {
                         <p>No Posts to show</p>
                     </div>
                     :
-                    <motion.div 
-                        layout
+                    <motion.div
                         className='flex flex-col items-center m-5'
                     >
                         {featuredImg && <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className='fixed p-5 z-50 top-0 h-screen w-screen flex justify-center items-center left-0 bg-black'>
@@ -73,13 +74,14 @@ const Posts = () => {
                             </p>
                         </motion.div>
                         {filtered && filtered.map(post=>(
-                            <PostCard post={post} key={post.id} setFeaturedImg={setFeaturedImg} />
+                            <PostCard setPostId={setPostId} post={post} key={post.id} setFeaturedImg={setFeaturedImg} />
                         ))}
                         {filtered.length === max ?
                             null
                         :
                             <AiOutlinePlusCircle size='50' className="mx-auto text-green-400 my-10 cursor-pointer" onClick={()=>setLimit(limit+limitInc)}/>
                         }
+                        {postId && <Comments setPostId={setPostId} postId={postId} />}
                     </motion.div>
             }
         </>
