@@ -1,7 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { auth } from '../firebase';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail, updatePassword, updateEmail } from '@firebase/auth';
-import { collection, addDoc, deleteDoc, doc } from '@firebase/firestore';
+import { 
+    createUserWithEmailAndPassword, 
+    onAuthStateChanged, 
+    signInWithEmailAndPassword, 
+    sendPasswordResetEmail, 
+    updatePassword, 
+    updateEmail 
+} from '@firebase/auth';
+import { collection, addDoc, deleteDoc, doc, updateDoc, arrayUnion, arrayRemove, getDoc } from '@firebase/firestore';
 import { projectFireStore, projectStorage } from './../firebase';
 import { Timestamp } from '@firebase/firestore';
 import { ref, deleteObject } from '@firebase/storage';
@@ -18,22 +25,11 @@ export function AuthProvider({children}) {
     const [loading, setLoading] = useState(true);
 
     async function signup(email, password){
-        await createUserWithEmailAndPassword(auth, email, password);
-        // const collectionRef = collection(projectFireStore, 'users');
-        // addDoc(collectionRef, {username: email.split('@')[0], email: email});
-        return
+        return createUserWithEmailAndPassword(auth, email, password);
     }
 
     async function login(email, password){
-        await signInWithEmailAndPassword(auth, email, password);
-        // const userRef = collection(projectFireStore, 'users');
-        // const q = query(userRef, where('email', '==', email));
-        // const querySnapshot = getDocs(q);
-        // querySnapshot.forEach((doc) => {
-        //     // doc.data() is never undefined for query doc snapshots
-        //     console.log(doc.id, " => ", doc.data());
-        //   });
-        return
+        return signInWithEmailAndPassword(auth, email, password);
     }
 
     function logout(){
@@ -52,19 +48,10 @@ export function AuthProvider({children}) {
         return updatePassword(currentUser, password)
     }
 
-    async function postContent(username, content){
+    function postContent(username, content){
         const collectionRef = collection(projectFireStore, 'posts');
-        await addDoc(collectionRef, {username: username, content: content, timeStamp: Timestamp.now()})
+        return addDoc(collectionRef, {username: username, content: content, timeStamp: Timestamp.now(), likes: []})
     }
-
-    useEffect(()=>{
-        const unsub = onAuthStateChanged(auth, (user)=>{
-            setCurrentUser(user);
-            setLoading(false);
-        })
-
-        return unsub;
-    }, [])
 
     async function deletePost(id, fileName){
         try{
@@ -79,6 +66,42 @@ export function AuthProvider({children}) {
         }
     }
 
+    function uploadComment(username, content, postId){
+        const collectionRef = collection(projectFireStore, 'comments');
+        return addDoc(collectionRef, {username, content, postId, timeStamp: Timestamp.now()})
+    }
+
+    function deleteComment(id){
+        return deleteDoc(doc(projectFireStore,'comments',id));
+    }
+
+    async function likePost(username, postId){
+
+        const collectionRef = doc(projectFireStore, 'posts', postId);
+        const docSnap = await getDoc(collectionRef);
+
+        if(docSnap.exists()){
+            if(docSnap.data().likes.includes(username)){
+                return updateDoc(collectionRef, {
+                    likes: arrayRemove(username)
+                })
+            }
+        }
+
+        return updateDoc(collectionRef, {
+            likes: arrayUnion(username)
+        })
+    }
+
+    useEffect(()=>{
+        const unsub = onAuthStateChanged(auth, (user)=>{
+            setCurrentUser(user);
+            setLoading(false);
+        })
+
+        return unsub;
+    }, [])
+
     const value = {
         currentUser: loading ? null : currentUser,
         signup,
@@ -88,7 +111,10 @@ export function AuthProvider({children}) {
         updateEmailFunc,
         updatePasswordFunc,
         postContent,
-        deletePost
+        deletePost,
+        uploadComment,
+        deleteComment,
+        likePost,
     }
 
     return (

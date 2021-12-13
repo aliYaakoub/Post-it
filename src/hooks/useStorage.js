@@ -35,7 +35,8 @@ const useStorage = (file, path, username, content, type) =>{
                         file: url, 
                         attachmentType: type, 
                         fileName: file.name
-                    }
+                    },
+                    likes: []
                 });
             }
             setUrl(url);
