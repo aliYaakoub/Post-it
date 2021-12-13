@@ -51,7 +51,7 @@ const PostCard = ({post, setFeaturedImg, setPostId}) => {
             if(post.attachment.attachmentType === 'image'){
                 return (
                     <div className='flex items-center justify-center relative'>
-                        <img className='rounded-lg' src={post.attachment.file} alt='' />
+                        <img className='rounded-lg cursor-pointer' onClick={()=>handleFullScreen()} src={post.attachment.file} alt='' />
                         <span 
                             onClick={()=>handleFullScreen()} 
                             className='cursor-pointer absolute bottom-5 right-5 text-white'
