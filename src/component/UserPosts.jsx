@@ -3,8 +3,10 @@ import PostCard from './PostCard';
 import useFirestoreBySearch from '../hooks/useFireStoreBySearch';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { motion } from 'framer-motion';
+import Comments from './Comments';
+import Likes from './Likes';
 
-const UserPosts = ({usernameFilter}) => {
+const UserPosts = ({usernameFilter: username, setSelectedUserPosts = false}) => {
 
     const [posts, setPosts] = useState([]);
     const [max, setMax] = useState(null);
@@ -12,8 +14,10 @@ const UserPosts = ({usernameFilter}) => {
     const filtered = posts.slice(0 , 1 * limit);
     const limitInc = 5;
     const [featuredImg, setFeaturedImg] = useState('')
+    const [postId, setPostId] = useState('');
+    const [postLikes, setPostLikes] = useState([]);
 
-    const { docs } =  useFirestoreBySearch('posts', usernameFilter);
+    const { docs } =  useFirestoreBySearch('posts', username);
 
     useEffect(()=>{
         setPosts(docs)
@@ -41,13 +45,15 @@ const UserPosts = ({usernameFilter}) => {
                         <img className='h-full ring-1 ring-gray-700 rounded-lg' src={featuredImg} alt="" />
                     </motion.div>}
                     {filtered && filtered.map(post=>(
-                        <PostCard post={post} key={post.id} setFeaturedImg={setFeaturedImg} />
+                        <PostCard setSelectedUserPosts={setSelectedUserPosts} setPostLikes={setPostLikes} setPostId={setPostId} post={post} key={post.id} setFeaturedImg={setFeaturedImg} />
                     ))}
                     {filtered.length === max ?
                         null
                     :
                         <AiOutlinePlusCircle size='50' className="mx-auto text-green-400 my-10 cursor-pointer" onClick={()=>setLimit(limit+limitInc)}/>
                     }
+                    {postId && <Comments setPostId={setPostId} postId={postId} />}
+                    {postLikes.length !== 0  && <Likes setPostLikes={setPostLikes} postLikes={postLikes} />}
                 </div>
             }
         </>
