@@ -8,7 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useInView } from 'react-intersection-observer';
 import useComments from './../hooks/useComments';
 
-const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes}) => {
+const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUserPosts}) => {
     
     const [errMsg, setErrMsg] = useState('');
     
@@ -99,7 +99,16 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes}) => {
             animate={animation}
         >
             <div className='border-b-2 relative pb-5 border-green-400 text-center text-white'>
-                <h1 className='md:text-3xl text-xl '>{post.username}</h1>
+                <h1 
+                    className='md:text-3xl text-xl cursor-pointer'
+                    onClick={()=>{
+                        if(setSelectedUserPosts){
+                            setSelectedUserPosts(post.username)
+                        }
+                    }} 
+                >
+                    {post.username}
+                </h1>
                 <span className='text-gray-400'>{moment(post.date).format('DD, MMM YYYY')}</span>
                 {currentUser && post.username === currentUser.email.split('@')[0] && 
                     <span 

@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import Comments from './Comments';
 import Likes from './Likes';
 
-const Posts = () => {
+const Posts = ({setSelectedUserPosts}) => {
 
     const [posts, setPosts] = useState([]);
     const [order, setOrder] = useState('desc')
@@ -76,7 +76,7 @@ const Posts = () => {
                             </p>
                         </motion.div>
                         {filtered && filtered.map(post=>(
-                            <PostCard setPostLikes={setPostLikes} setPostId={setPostId} post={post} key={post.id} setFeaturedImg={setFeaturedImg} />
+                            <PostCard setSelectedUserPosts={setSelectedUserPosts} setPostLikes={setPostLikes} setPostId={setPostId} post={post} key={post.id} setFeaturedImg={setFeaturedImg} />
                         ))}
                         {filtered.length === max ?
                             null

@@ -9,6 +9,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import NewPost from './component/NewPost';
 import Filters from './component/Filters';
 import UserPosts from './component/UserPosts';
+import SelectedUser from './component/SelectedUser';
 
 const App = () => {
 
@@ -18,6 +19,7 @@ const App = () => {
   const [newPost, setNewPost] = useState(false);
   const [usernameFilter, setUsernameFilter] = useState('');
   const [showFiltered, setShowFiltered] = useState(false);
+  const [selectedUserPosts, setSelectedUserPosts] = useState('');
 
   useEffect(()=>{
     if(usernameFilter.length === 0){
@@ -36,8 +38,15 @@ const App = () => {
         {openSettings && <Settings setOpenSettings={setOpenSettings} />}
         {newPost && <NewPost setNewPost={setNewPost} />}
         <Navbar setIsLoggingIn={setIsLoggingIn} setIsRegistering={setIsRegistering} setOpenSettings={setOpenSettings} setNewPost={setNewPost} />
-        <Filters usernameFilter={usernameFilter} setUsernameFilter={setUsernameFilter} />
-        {showFiltered ? <UserPosts usernameFilter={usernameFilter} /> : <Posts />}
+        {!selectedUserPosts && <Filters usernameFilter={usernameFilter} setUsernameFilter={setUsernameFilter} />}
+        {selectedUserPosts ?
+          <SelectedUser setSelectedUserPosts={setSelectedUserPosts} selectedUserPosts={selectedUserPosts} />
+          :
+          (showFiltered ? 
+            <UserPosts usernameFilter={usernameFilter} setSelectedUserPosts={setSelectedUserPosts} /> : 
+            <Posts setSelectedUserPosts={setSelectedUserPosts} />
+          )
+        }
       </div>
     </AuthProvider>
   );
