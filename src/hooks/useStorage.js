@@ -8,9 +8,19 @@ const useStorage = (file, path, username, content, type) =>{
     const [error, setError] = useState(null);
     const [url, setUrl] = useState(null);
 
+    const randomArray = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    function getRandomNum(num){
+        let result = '';
+        for(let i=0; i<num; i++){
+            result += randomArray[Math.floor(Math.random()*(randomArray.length - 1))];
+        }
+        return result;
+    }
+
     useEffect(()=>{
+        let fileName = getRandomNum(10);
         // refrences
-        const spaceRef = ref(projectStorage, `${path}/${file.name}`);
+        const spaceRef = ref(projectStorage, `${path}/${fileName}.${file.type.split('/')[1]}`);
         const uploadTask = uploadBytesResumable(spaceRef, file);
         const collectionRef = collection(projectFireStore, `${path}`);
         console.log(uploadTask);
@@ -34,7 +44,7 @@ const useStorage = (file, path, username, content, type) =>{
                     attachment: {
                         file: url, 
                         attachmentType: type, 
-                        fileName: file.name
+                        fileName: `${fileName}.${file.type.split('/')[1]}`
                     },
                     likes: []
                 });
