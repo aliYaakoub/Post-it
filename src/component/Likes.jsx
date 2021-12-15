@@ -19,7 +19,7 @@ const Likes = ({postLikes, setPostLikes}) => {
                     <p>No one liked this post yet</p>
                     :
                     postLikes && postLikes.map(postLike => (
-                        <p className='text-center'>{postLike}</p>
+                        <p className='text-center my-1'>{postLike}</p>
                     ))
                 }
             </motion.div>

@@ -13,7 +13,7 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
     
     const [errMsg, setErrMsg] = useState('');
     const [profilePic, setProfilePic] = useState('');
-    
+
     const { currentUser, deletePost, likePost } = useAuth();
     const { docs } = useComments('comments', post.id)
     const { docs: profilePictures } = useFirestoreBySearch('profile-pictures', post.username);
@@ -101,7 +101,6 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
             }
             return '';
         })
-        console.log(profilePictures);
     }, [profilePictures])
 
     return (
@@ -115,7 +114,7 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
             <div className='border-b-2 relative pb-5 border-green-400 text-center text-white'>
                 <div className="flex items-center justify-center">
                     {profilePic && 
-                        <div className='w-8 h-8 overflow-hidden md:w-12 md:h-12 rounded-full mx-3 flex items-center justify-center'>
+                        <div className='bg-black w-8 h-8 overflow-hidden md:w-12 md:h-12 rounded-full mx-3 flex items-center justify-center'>
                             <img className='' src={profilePic} alt="" />
                         </div>
                     }
@@ -130,7 +129,7 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
                         {post.username}
                     </h1>
                 </div>
-                <span className='text-gray-400'>{moment(post.date).format('DD, MMM YYYY')}</span>
+                <span className='text-gray-400'>{moment(post.timeStamp.toDate()).format('DD, MMM YYYY')}</span>
                 {currentUser && post.username === currentUser.email.split('@')[0] && 
                     <span 
                         className='absolute right-0 text-red-500 top-0 cursor-pointer'

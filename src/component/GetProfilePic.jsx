@@ -14,13 +14,12 @@ const GetProfilePic = ({username}) => {
             }
             return '';
         })
-        console.log(docs);
     }, [docs])
 
     return (
         <>
             {profilePic && 
-                <div className='w-10 h-10 overflow-hidden  rounded-full mx-3 flex items-center justify-center'>
+                <div className='w-8 h-8 overflow-hidden  rounded-full mx-3 flex items-center justify-center bg-black'>
                     <img className='' src={profilePic} alt="" />
                 </div>
             }

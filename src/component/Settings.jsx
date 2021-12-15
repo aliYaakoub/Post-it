@@ -103,7 +103,7 @@ const Settings = ({setOpenSettings}) => {
                 {/*  */}
                 <div className="py-5 border-b-2 border-black">
                     <div className='mb-5 flex items-center justify-center flex-col'>
-                        <input className='file-input' type="file" name='file' id='file' onChange={(e)=>setFile(e.target.files[0])} />
+                        <input className='file-input' accept='image/*' type="file" name='file' id='file' onChange={(e)=>setFile(e.target.files[0])} />
                         <label htmlFor="file" className='file-label h-10 flex items-center justify-center border-2 border-black'>
                             <p className='px-5'>{file ? file.name : 'select a file to upload'}</p>
                         </label>
