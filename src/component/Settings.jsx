@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
+import ProgressBar from './ProgressBar';
 
 const Settings = ({setOpenSettings}) => {
     
@@ -9,8 +10,11 @@ const Settings = ({setOpenSettings}) => {
     const [showPassword, setShowPassword] = useState(false);
     const [errMsg, setErrMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
+    const [file, setFile] = useState('');
+    const [fileToUpload, setFileToUpload] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const { logout, updatePasswordFunc } = useAuth();
+    const { logout, updatePasswordFunc, currentUser } = useAuth();
 
     useEffect(()=>{
         setBgOpacity('80')
@@ -25,12 +29,40 @@ const Settings = ({setOpenSettings}) => {
     }
 
     async function resetPassword(){
+        setSuccessMsg('')
         setErrMsg('');
         if(password.length < 6){
             return setErrMsg('password must be more than 6 characters')
         }
-        await updatePasswordFunc(password);
-        setSuccessMsg('updated');
+        try{
+            await updatePasswordFunc(password);
+            setSuccessMsg('updated');
+        }
+        catch(err){
+            if(err.message === 'Firebase: Error (auth/requires-recent-login).'){
+                setErrMsg('this operation requires a recent login')
+            }
+            else{
+                setErrMsg('could not reset password');
+            }
+        }
+    }
+
+    async function handlePost(){
+        setSuccessMsg('')
+        setErrMsg('')
+        setLoading(true);
+        if(!file){
+            return setErrMsg('please add a picture.')
+        }
+        try{
+            setFileToUpload(file) 
+        }
+        catch(err){
+            console.error(err);
+            setErrMsg('could not upload image.')
+        }
+        setLoading(false);
     }
 
     return (
@@ -41,8 +73,9 @@ const Settings = ({setOpenSettings}) => {
                 animate={{y: '0vh'}}
             >
                 <span className='absolute top-3 right-5 cursor-pointer' onClick={()=>setOpenSettings(false)}>&#10005;</span>
-                <button onClick={()=>handleLogout()} className='my-5 w-full py-2 btn-logout'>Logout</button>
-                <div className='my-5'>
+                {errMsg && <p className='text-center text-red-500'>{errMsg}</p>}
+                {successMsg && <p className='text-center text-green-400'>{successMsg}</p>}
+                <div className='border-b-2 border-black py-5'>
                     <label htmlFor="password" className='font-semibold text-lg'>Reset your Password : </label>
                     <input
                         type={showPassword ? 'text' : 'password'}
@@ -64,10 +97,29 @@ const Settings = ({setOpenSettings}) => {
                         />
                         <label htmlFor='showPassword' className='px-2 cursor-pointer'>Show Password</label>
                     </div>
-                    {errMsg && <p className='text-center text-red-500'>{errMsg}</p>}
-                    {successMsg && <p className='text-center text-green-400'>{successMsg}</p>}
                     <button onClick={()=>resetPassword()} className='mt-5 w-full border-2 border-black py-2 btn-login'>Reset Password</button>
                 </div>
+
+                {/*  */}
+                <div className="py-5 border-b-2 border-black">
+                    <div className='mb-5 flex items-center justify-center flex-col'>
+                        <input className='file-input' type="file" name='file' id='file' onChange={(e)=>setFile(e.target.files[0])} />
+                        <label htmlFor="file" className='file-label h-10 flex items-center justify-center border-2 border-black'>
+                            <p className='px-5'>{file ? file.name : 'select a file to upload'}</p>
+                        </label>
+                    </div>
+                    <div className='mt-5 flex items-center justify-center'>
+                        <button disabled={loading} onClick={()=>handlePost()} className='w-full max-w-sm border-2 border-black btn-login py-2'>Upload Profile picture</button>
+                    </div>
+                    <div className='w-full'>
+                        {fileToUpload && <ProgressBar setNewPost={setOpenSettings} file={fileToUpload} username={currentUser.email.split('@')[0]} setFileToUpload={setFileToUpload} setFile={setFile} path='profile-pictures' />}
+                    </div>
+                </div>
+
+                <div className="py-5">
+                    <button onClick={()=>handleLogout()} className='w-full py-2 btn-logout'>Logout</button>
+                </div>
+                
             </motion.div>
         </div>
     )

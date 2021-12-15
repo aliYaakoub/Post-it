@@ -3,6 +3,7 @@ import { FiSettings } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { AiOutlinePlus } from 'react-icons/ai'
 import { motion } from 'framer-motion';
+import GetProfilePic from './GetProfilePic';
 
 const Navbar = ({setIsLoggingIn, setIsRegistering, setNewPost, setOpenSettings}) => {
 
@@ -26,6 +27,7 @@ const Navbar = ({setIsLoggingIn, setIsRegistering, setNewPost, setOpenSettings})
                         <span className='pl-2 text-sm md:text-xl'>create a new post</span>
                     </div>
                     <div className="flex justify-center items-center">
+                        {currentUser && <GetProfilePic username={currentUser.email.split('@')[0]} />}
                         <h1 className='pr-2 md:text-xl'>{currentUser.email.split('@')[0]}</h1>
                         <div className="mr-5 cursor-pointer hover:text-white transition-colors duration-200" onClick={()=>setOpenSettings(true)}>
                             <FiSettings size='30' />

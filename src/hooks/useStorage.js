@@ -37,7 +37,7 @@ const useStorage = (file, path, username, content, type) =>{
         async ()=>{
             const url = await getDownloadURL(uploadTask.snapshot.ref)
             if(path === 'posts'){
-                addDoc(collectionRef, {
+                await addDoc(collectionRef, {
                     username: username, 
                     timeStamp: Timestamp.now(), 
                     content: content, 
@@ -47,6 +47,16 @@ const useStorage = (file, path, username, content, type) =>{
                         fileName: `${fileName}.${file.type.split('/')[1]}`
                     },
                     likes: []
+                });
+            }
+            else if(path === 'profile-pictures') {
+                await addDoc(collectionRef, {
+                    username: username, 
+                    attachment: {
+                        file: url, 
+                        fileName: `${fileName}.${file.type.split('/')[1]}`
+                    },
+                    timeStamp: Timestamp.now()
                 });
             }
             setUrl(url);

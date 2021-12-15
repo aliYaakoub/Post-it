@@ -7,15 +7,19 @@ import { BiCommentDetail } from 'react-icons/bi';
 import { useAuth } from '../contexts/AuthContext';
 import { useInView } from 'react-intersection-observer';
 import useComments from './../hooks/useComments';
+import useFirestoreBySearch from './../hooks/useFireStoreBySearch';
 
 const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUserPosts}) => {
     
     const [errMsg, setErrMsg] = useState('');
+    const [profilePic, setProfilePic] = useState('');
     
     const { currentUser, deletePost, likePost } = useAuth();
     const { docs } = useComments('comments', post.id)
+    const { docs: profilePictures } = useFirestoreBySearch('profile-pictures', post.username);
     const { ref, inView} = useInView();
     const animation = useAnimation();
+
 
     function handleFullScreen(){
         setFeaturedImg(post.attachment.file)
@@ -90,6 +94,16 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
         }
     },[inView, animation])
 
+    useEffect(() => {
+        setProfilePic(()=>{
+            if(profilePictures.length > 0){
+                return profilePictures.sort((a,b)=> a.timeStamp - b.timeStamp).slice(-1)[0].attachment.file;
+            }
+            return '';
+        })
+        console.log(profilePictures);
+    }, [profilePictures])
+
     return (
         <motion.div 
             ref={ref}
@@ -99,20 +113,27 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
             animate={animation}
         >
             <div className='border-b-2 relative pb-5 border-green-400 text-center text-white'>
-                <h1 
-                    className='md:text-3xl text-xl cursor-pointer'
-                    onClick={()=>{
-                        if(setSelectedUserPosts){
-                            setSelectedUserPosts(post.username)
-                        }
-                    }} 
-                >
-                    {post.username}
-                </h1>
+                <div className="flex items-center justify-center">
+                    {profilePic && 
+                        <div className='w-8 h-8 overflow-hidden md:w-12 md:h-12 rounded-full mx-3 flex items-center justify-center'>
+                            <img className='' src={profilePic} alt="" />
+                        </div>
+                    }
+                    <h1
+                        className='md:text-3xl text-xl cursor-pointer'
+                        onClick={()=>{
+                            if(setSelectedUserPosts){
+                                setSelectedUserPosts(post.username)
+                            }
+                        }}
+                    >
+                        {post.username}
+                    </h1>
+                </div>
                 <span className='text-gray-400'>{moment(post.date).format('DD, MMM YYYY')}</span>
                 {currentUser && post.username === currentUser.email.split('@')[0] && 
                     <span 
-                        className='absolute right-0 text-red-500 top-0'
+                        className='absolute right-0 text-red-500 top-0 cursor-pointer'
                         onClick={()=>handleDelete()}
                     >
                         <AiFillDelete size='30' />

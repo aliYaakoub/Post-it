@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import useStorage from '../hooks/useStorage'
 import { motion } from 'framer-motion';
 
-const ProgressBar = ({file, setFile, setFileToUpload, path, username, content, setNewPost, type}) => {
+const ProgressBar = ({file, setFile, setFileToUpload, path, username, content=false, setNewPost, type=false}) => {
 
     if(path === 'profile-picture'){
         
