@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import PostCard from './PostCard';
-import useFirestoreBySearch from '../hooks/useFireStoreBySearch';
+import useFirestoreBySearch from '../../hooks/useFireStoreBySearch';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { motion } from 'framer-motion';
-import Comments from './Comments';
-import Likes from './Likes';
+import Comments from '../Comments';
+import Likes from '../Likes';
 
 const UserPosts = ({usernameFilter: username, setSelectedUserPosts = false}) => {
 

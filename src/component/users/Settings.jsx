@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { motion } from 'framer-motion';
-import ProgressBar from './ProgressBar';
+import ProgressBar from '../ProgressBar';
 
 const Settings = ({setOpenSettings}) => {
     

@@ -9,7 +9,7 @@ import {
     updateEmail 
 } from '@firebase/auth';
 import { collection, addDoc, deleteDoc, doc, updateDoc, arrayUnion, arrayRemove, getDoc } from '@firebase/firestore';
-import { projectFireStore, projectStorage } from './../firebase';
+import { projectFireStore, projectStorage } from '../firebase';
 import { Timestamp } from '@firebase/firestore';
 import { ref, deleteObject } from '@firebase/storage';
 

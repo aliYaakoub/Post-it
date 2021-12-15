@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import moment from 'moment';
+import { useInView } from 'react-intersection-observer';
 import { BsFullscreen } from 'react-icons/bs';
 import { AiFillDelete, AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { BiCommentDetail } from 'react-icons/bi';
-import { useAuth } from '../contexts/AuthContext';
-import { useInView } from 'react-intersection-observer';
-import useComments from './../hooks/useComments';
-import useFirestoreBySearch from './../hooks/useFireStoreBySearch';
+import { useAuth } from '../../contexts/AuthContext';
+import useComments from '../../hooks/useComments';
+import useFirestoreBySearch from '../../hooks/useFireStoreBySearch';
 
 const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUserPosts}) => {
     

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import PostCard from './PostCard';
-import useFirestore from '../hooks/useFirestore';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { IoIosArrowDown } from 'react-icons/io';
 import { motion } from 'framer-motion';
-import Comments from './Comments';
-import Likes from './Likes';
+import PostCard from './PostCard';
+import useFirestore from '../../hooks/useFirestore';
+import Comments from '../Comments';
+import Likes from '../Likes';
 
 const Posts = ({setSelectedUserPosts}) => {
 

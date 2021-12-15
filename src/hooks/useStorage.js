@@ -9,6 +9,7 @@ const useStorage = (file, path, username, content, type) =>{
     const [url, setUrl] = useState(null);
 
     const randomArray = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    
     function getRandomNum(num){
         let result = '';
         for(let i=0; i<num; i++){

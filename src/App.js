@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import Navbar from './component/Navbar';
-import Posts from './component/Posts';
-import Login from './component/Login';
-import Register from './component/Register';
-import './App.scss';
-import Settings from './component/Settings';
+import Posts from './component/Posts/Posts';
+import Login from './component/users/Login';
+import Register from './component/users/Register';
+import Settings from './component/users/Settings';
 import { AuthProvider } from './contexts/AuthContext';
-import NewPost from './component/NewPost';
+import NewPost from './component/Posts/NewPost';
 import Filters from './component/Filters';
-import UserPosts from './component/UserPosts';
-import SelectedUser from './component/SelectedUser';
+import UserPosts from './component/Posts/UserPosts';
+import SelectedUser from './component/Posts/SelectedUser';
+import './App.scss';
 
 const App = () => {
 

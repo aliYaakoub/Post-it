@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import ProgressBar from './ProgressBar';
-import { useAuth } from '../contexts/AuthContext';
+import ProgressBar from '../ProgressBar';
+import { useAuth } from '../../contexts/AuthContext';
 
 const NewPost = ({setNewPost}) => {
     

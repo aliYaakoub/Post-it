@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import useFirestoreBySearch from './../hooks/useFireStoreBySearch';
+import useFirestoreBySearch from '../hooks/useFireStoreBySearch';
 
 const GetProfilePic = ({username}) => {
 

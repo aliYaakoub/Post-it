@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '../contexts/AuthContext';
-// import ProgressBar from './ProgressBar';
-// import { CgProfile } from 'react-icons/cg';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Register = ({setIsRegistering}) => {
 
@@ -12,8 +10,6 @@ const Register = ({setIsRegistering}) => {
     const [bgOpacity, setBgOpacity] = useState('0');
     const [transform, setTransform] = useState('translate(1000px)')
     const [loading, setLoading] = useState(false);
-    // const [file, setFile] = useState(null);
-    // const [fileToUpload, setFileToUpload] = useState(null);
 
     const { signup } = useAuth();
 
@@ -88,14 +84,6 @@ const Register = ({setIsRegistering}) => {
                         />
                         <label htmlFor='showPassword' className='px-2 cursor-pointer'>Show Password</label>
                     </div>
-                    {/* <div className='my-5 flex items-center justify-center'>
-                        <input className='file-input' accept='image/*' type="file" name='file' id='file' onChange={(e)=>setFile(e.target.files[0])} />
-                        <label htmlFor="file" className='file-label h-10 flex items-center justify-center border-2 border-black'>
-                            <CgProfile size='30' />
-                            <p className='px-5'>{file ? file.name : 'Upload a Profile Picture'}</p>
-                        </label>
-                        {fileToUpload && <ProgressBar file={fileToUpload} setFileToUpload={setFileToUpload} setFile={setFile} path='profile-pictures' />}
-                    </div> */}
                 </div>
                 {errMessage ? <p className='text-center text-red-600'>{errMessage}</p> : null}
                 <button disabled={loading} onClick={()=>handleSubmit()} className='my-5 w-full border-2 border-black py-2 btn-login'>Sign up and Login</button>

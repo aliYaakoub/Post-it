@@ -1,6 +1,6 @@
 import React from 'react'
 import UserPosts from './UserPosts'
-import GetProfilePic from './GetProfilePic';
+import GetProfilePic from '../GetProfilePic';
 
 const SelectedUser = ({selectedUserPosts: username, setSelectedUserPosts}) => {
     return (
