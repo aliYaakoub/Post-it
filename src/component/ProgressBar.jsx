@@ -2,13 +2,13 @@ import React, { useEffect } from 'react'
 import useStorage from '../hooks/useStorage'
 import { motion } from 'framer-motion';
 
-const ProgressBar = ({file, setFile, setFileToUpload, path, username, content=false, setNewPost, type=false}) => {
+const ProgressBar = ({file, setFile, setFileToUpload, path, username, content=false, setNewPost, type=false, userId = false}) => {
 
     if(path === 'profile-picture'){
         
     }
 
-    const { url, progress } = useStorage(file, path, username, content, type);
+    const { url, progress } = useStorage(file, path, username, content, type, userId);
     console.log(progress, url);
     
     useEffect(()=>{

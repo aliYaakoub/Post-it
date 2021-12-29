@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { projectStorage, projectFireStore } from '../firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-import { collection, addDoc, Timestamp } from '@firebase/firestore';
+import { collection, addDoc, Timestamp, doc, getDoc, setDoc } from '@firebase/firestore';
+import { deleteObject } from '@firebase/storage';
 
-const useStorage = (file, path, username, content, type) =>{
+const useStorage = (file, path, username, content, type, userId) =>{
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
     const [url, setUrl] = useState(null);
@@ -51,14 +52,33 @@ const useStorage = (file, path, username, content, type) =>{
                 });
             }
             else if(path === 'profile-pictures') {
-                await addDoc(collectionRef, {
-                    username: username, 
-                    attachment: {
-                        file: url, 
-                        fileName: `${fileName}.${file.type.split('/')[1]}`
-                    },
-                    timeStamp: Timestamp.now()
-                });
+                // await addDoc(collectionRef, {
+                //     username: username, 
+                //     attachment: {
+                //         file: url, 
+                //         fileName: `${fileName}.${file.type.split('/')[1]}`
+                //     },
+                //     timeStamp: Timestamp.now()
+                // });
+                try{
+                    const doesExist = doc(projectFireStore, 'profile-pictures', userId)
+                    const elem = await getDoc(doesExist);
+                    if(elem.exists()){
+                        const imageRef = ref(projectStorage, `profile-pictures/${elem.data().attachment.fileName}`);
+                        await deleteObject(imageRef)
+                    }
+                    await setDoc(doc(projectFireStore, 'profile-pictures', userId), {
+                        username: username, 
+                        attachment: {
+                            file: url, 
+                            fileName: `${fileName}.${file.type.split('/')[1]}`
+                        },
+                        timeStamp: Timestamp.now()
+                    })
+                }
+                catch(err){
+                    console.error(err.message);
+                }
             }
             setUrl(url);
         });

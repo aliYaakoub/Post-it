@@ -112,7 +112,7 @@ const Settings = ({setOpenSettings}) => {
                         <button disabled={loading} onClick={()=>handlePost()} className='w-full max-w-sm border-2 border-black btn-login py-2'>Upload Profile picture</button>
                     </div>
                     <div className='w-full'>
-                        {fileToUpload && <ProgressBar setNewPost={setOpenSettings} file={fileToUpload} username={currentUser.email.split('@')[0]} setFileToUpload={setFileToUpload} setFile={setFile} path='profile-pictures' />}
+                        {fileToUpload && <ProgressBar userId={currentUser.uid} setNewPost={setOpenSettings} file={fileToUpload} username={currentUser.email.split('@')[0]} setFileToUpload={setFileToUpload} setFile={setFile} path='profile-pictures' />}
                     </div>
                 </div>
 
