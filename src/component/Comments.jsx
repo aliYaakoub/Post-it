@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import useComments from '../hooks/useComments';
 import { useAuth } from '../contexts/AuthContext';
 import moment from 'moment';
 import { AiFillDelete } from 'react-icons/ai';
 
-const Comments = ({setPostId, postId}) => {
+const Comments = ({setPostId, postId: post}) => {
 
     const [comments, setComments] = useState([]);
     const [content, setContent] = useState('');
     const [errMsg, setErrMsg] = useState('');
 
-    const { docs } = useComments('comments', postId);
     const { currentUser, uploadComment, deleteComment } = useAuth();
 
     async function handleSubmit(){
         setErrMsg('');
         if(currentUser){
             try{
-                await uploadComment(currentUser.email.split('@')[0], content, postId);
+                await uploadComment(currentUser.email.split('@')[0], content, post.id);
                 setContent('')
             }
             catch(err){
@@ -43,8 +41,8 @@ const Comments = ({setPostId, postId}) => {
     }
 
     useEffect(()=>{
-        setComments(docs.sort((a,b) => b.timeStamp - a.timeStamp ))
-    }, [docs])
+        setComments(post.comments.sort((a,b) => b.timeStamp - a.timeStamp ))
+    }, [post.comments.length, post.comments])
 
     return (
         <motion.div 

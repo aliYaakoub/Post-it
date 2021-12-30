@@ -48,18 +48,11 @@ const useStorage = (file, path, username, content, type, userId) =>{
                         attachmentType: type, 
                         fileName: `${fileName}.${file.type.split('/')[1]}`
                     },
-                    likes: []
+                    likes: [],
+                    comments: []
                 });
             }
             else if(path === 'profile-pictures') {
-                // await addDoc(collectionRef, {
-                //     username: username, 
-                //     attachment: {
-                //         file: url, 
-                //         fileName: `${fileName}.${file.type.split('/')[1]}`
-                //     },
-                //     timeStamp: Timestamp.now()
-                // });
                 try{
                     const doesExist = doc(projectFireStore, 'profile-pictures', userId)
                     const elem = await getDoc(doesExist);
@@ -82,7 +75,7 @@ const useStorage = (file, path, username, content, type, userId) =>{
             }
             setUrl(url);
         });
-    },[file, path, username, content, type])
+    },[file, path, username, content, type, userId])
 
     return { progress, error, url };
 

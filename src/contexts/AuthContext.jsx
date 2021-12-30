@@ -50,7 +50,7 @@ export function AuthProvider({children}) {
 
     function postContent(username, content){
         const collectionRef = collection(projectFireStore, 'posts');
-        return addDoc(collectionRef, {username: username, content: content, timeStamp: Timestamp.now(), likes: []})
+        return addDoc(collectionRef, {username: username, content: content, timeStamp: Timestamp.now(), likes: [], comments: []})
     }
 
     async function deletePost(id, fileName){
@@ -67,8 +67,19 @@ export function AuthProvider({children}) {
     }
 
     function uploadComment(username, content, postId){
-        const collectionRef = collection(projectFireStore, 'comments');
-        return addDoc(collectionRef, {username, content, postId, timeStamp: Timestamp.now()})
+        // const collectionRef = collection(projectFireStore, 'comments');
+        // return addDoc(collectionRef, {username, content, postId, timeStamp: Timestamp.now()})
+        
+
+        const postRef = doc(projectFireStore, 'posts', postId);
+        return updateDoc(postRef, {
+            comments: arrayUnion({
+                username, 
+                content, 
+                postId, 
+                timeStamp: Timestamp.now()
+            })
+        })
     }
 
     function deleteComment(id){

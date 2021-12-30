@@ -6,7 +6,6 @@ import { BsFullscreen } from 'react-icons/bs';
 import { AiFillDelete, AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { BiCommentDetail } from 'react-icons/bi';
 import { useAuth } from '../../contexts/AuthContext';
-import useComments from '../../hooks/useComments';
 import useFirestoreBySearch from '../../hooks/useFireStoreBySearch';
 
 const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUserPosts}) => {
@@ -15,7 +14,6 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
     const [profilePic, setProfilePic] = useState('');
 
     const { currentUser, deletePost, likePost } = useAuth();
-    const { docs } = useComments('comments', post.id)
     const { docs: profilePictures } = useFirestoreBySearch('profile-pictures', post.username);
     const { ref, inView} = useInView();
     const animation = useAnimation();
@@ -157,8 +155,8 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
                     <p onClick={()=>setPostLikes(post.likes)} className='px-2 cursor-pointer'>{post.likes.length}</p>
                 </span>
                 <span className="px-5 flex items-center">
-                    <BiCommentDetail size='30' className='cursor-pointer' onClick={()=>setPostId(post.id)} />
-                    <p className='px-2'>{docs.length}</p>
+                    <BiCommentDetail size='30' className='cursor-pointer' onClick={()=>setPostId(post)} />
+                    <p className='px-2'>{post.comments.length}</p>
                 </span>
             </div>
             {errMsg && <p className='text-center text-red-500'>{errMsg}</p>}
