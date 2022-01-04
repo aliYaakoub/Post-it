@@ -129,7 +129,7 @@ export function AuthProvider({children}) {
             }
         })
         return unsub;
-    }, [currentUser])
+    }, [])
 
     const value = {
         currentUser: loading ? null : currentUser,

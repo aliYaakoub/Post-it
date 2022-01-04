@@ -1,7 +1,24 @@
 import { motion } from 'framer-motion'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
 
 const Likes = ({postLikes, setPostLikes}) => {
+
+    const { getUserData } = useAuth();
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        const getUser = async () => {
+            for(let i = 0 ; i < postLikes.length - 1 ; i++){
+                const userToGet = await getUserData(postLikes[i]);
+                setUsers(user => {
+                    user.push(userToGet.data())
+                });
+            }
+        }
+        getUser();
+    }, [getUserData, postLikes])
+
     return (
         <motion.div 
             initial={{opacity: 0}}  
@@ -18,8 +35,8 @@ const Likes = ({postLikes, setPostLikes}) => {
                 {postLikes.length === 0 ? 
                     <p>No one liked this post yet</p>
                     :
-                    postLikes && postLikes.map(postLike => (
-                        <p className='text-center my-1'>{postLike}</p>
+                    users && users.map(userId => (
+                        <p className='text-center my-1'>{userId}</p>
                     ))
                 }
             </motion.div>
