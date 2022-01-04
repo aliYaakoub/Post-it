@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { projectStorage, projectFireStore } from '../firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-import { collection, addDoc, Timestamp, doc, getDoc, setDoc } from '@firebase/firestore';
+import { collection, addDoc, Timestamp, doc, getDoc, updateDoc } from '@firebase/firestore';
 import { deleteObject } from '@firebase/storage';
 
-const useStorage = (file, path, username, content, type, userId) =>{
+const useStorage = (file, path, posterId, content, type, userId) =>{
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
     const [url, setUrl] = useState(null);
@@ -40,7 +40,7 @@ const useStorage = (file, path, username, content, type, userId) =>{
             const url = await getDownloadURL(uploadTask.snapshot.ref)
             if(path === 'posts'){
                 await addDoc(collectionRef, {
-                    username: username, 
+                    posterId: posterId, 
                     timeStamp: Timestamp.now(), 
                     content: content, 
                     attachment: {
@@ -54,19 +54,30 @@ const useStorage = (file, path, username, content, type, userId) =>{
             }
             else if(path === 'profile-pictures') {
                 try{
-                    const doesExist = doc(projectFireStore, 'profile-pictures', userId)
-                    const elem = await getDoc(doesExist);
-                    if(elem.exists()){
-                        const imageRef = ref(projectStorage, `profile-pictures/${elem.data().attachment.fileName}`);
+                    // const doesExist = doc(projectFireStore, 'profile-pictures', userId)
+                    // const elem = await getDoc(doesExist);
+                    // if(elem.exists()){
+                    //     const imageRef = ref(projectStorage, `profile-pictures/${elem.data().attachment.fileName}`);
+                    //     await deleteObject(imageRef)
+                    // }
+                    // await setDoc(doc(projectFireStore, 'profile-pictures', userId), {
+                    //     username: username, 
+                    //     attachment: {
+                    //         file: url, 
+                    //         fileName: `${fileName}.${file.type.split('/')[1]}`
+                    //     },
+                    //     timeStamp: Timestamp.now()
+                    // })
+                    const user = await getDoc(doc(projectFireStore, 'users', userId));
+                    if(user.data().attachment){
+                        const imageRef = ref(projectStorage, `profile-pictures/${user.data().attachment.fileName}`);
                         await deleteObject(imageRef)
                     }
-                    await setDoc(doc(projectFireStore, 'profile-pictures', userId), {
-                        username: username, 
+                    await updateDoc(doc(projectFireStore, 'users', userId),{
                         attachment: {
                             file: url, 
                             fileName: `${fileName}.${file.type.split('/')[1]}`
                         },
-                        timeStamp: Timestamp.now()
                     })
                 }
                 catch(err){
@@ -75,7 +86,7 @@ const useStorage = (file, path, username, content, type, userId) =>{
             }
             setUrl(url);
         });
-    },[file, path, username, content, type, userId])
+    },[file, path, posterId, content, type, userId])
 
     return { progress, error, url };
 

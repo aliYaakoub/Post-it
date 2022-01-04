@@ -1,18 +1,20 @@
 import {useState, useEffect} from 'react'
 import { projectFireStore } from '../firebase'
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
-import { auth } from '../firebase';
+import { useAuth } from './../contexts/AuthContext';
 
 const useFirestoreBySearch = (col, user) =>{
     const [docs, setDocs] = useState([]);
 
+    const { currentUser } = useAuth()
+
     useEffect(()=>{
         let q;
-        if(user === 'AuthUser' && auth.currentUser){
-            q = query(collection(projectFireStore, col), where("username", "==", auth.currentUser.email.split('@')[0]));
+        if(user === 'AuthUser' && currentUser){
+            q = query(collection(projectFireStore, col), where("posterId", "==", currentUser.id));
         }
         else{
-            q = query(collection(projectFireStore, col), where("username", "==", user));
+            q = query(collection(projectFireStore, col), where("posterId", "==", user));
         }
         const unsub = onSnapshot(q, (snap)=>{
                 let documents = [];
@@ -22,7 +24,7 @@ const useFirestoreBySearch = (col, user) =>{
                 setDocs(documents);
             })
         return () => unsub();
-    }, [col, user])
+    }, [col, user, currentUser])
 
     return { docs };
 }

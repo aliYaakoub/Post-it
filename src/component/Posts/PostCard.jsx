@@ -6,15 +6,13 @@ import { BsFullscreen } from 'react-icons/bs';
 import { AiFillDelete, AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { BiCommentDetail } from 'react-icons/bi';
 import { useAuth } from '../../contexts/AuthContext';
-import useFirestoreBySearch from '../../hooks/useFireStoreBySearch';
 
 const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUserPosts}) => {
     
     const [errMsg, setErrMsg] = useState('');
-    const [profilePic, setProfilePic] = useState('');
+    const [user, setUser] = useState(null);
 
-    const { currentUser, deletePost, likePost } = useAuth();
-    const { docs: profilePictures } = useFirestoreBySearch('profile-pictures', post.username);
+    const { currentUser, deletePost, likePost, getUserData } = useAuth();
     const { ref, inView} = useInView();
     const animation = useAnimation();
 
@@ -36,7 +34,7 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
         setErrMsg('')
         if(currentUser){
             try{
-                await likePost(currentUser.email.split('@')[0], post.id);
+                await likePost(currentUser.id, post.id);
             }
             catch(err){
                 console.error(err);
@@ -93,13 +91,12 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
     },[inView, animation])
 
     useEffect(() => {
-        setProfilePic(()=>{
-            if(profilePictures.length > 0){
-                return profilePictures.sort((a,b)=> a.timeStamp - b.timeStamp).slice(-1)[0].attachment.file;
-            }
-            return '';
-        })
-    }, [profilePictures])
+        const getUser = async () => {
+            const userToGet = await getUserData(post.posterId);
+            setUser(userToGet.data());
+        }
+        getUser();
+    }, [getUserData, post.posterId])
 
     return (
         <motion.div 
@@ -111,24 +108,24 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
         >
             <div className='border-b-2 relative pb-5 border-green-400 text-center text-white'>
                 <div className="flex items-center justify-center">
-                    {profilePic && 
+                    {user && user.attachment && 
                         <div className='bg-black w-8 h-8 overflow-hidden md:w-12 md:h-12 rounded-full mx-3 flex items-center justify-center'>
-                            <img className='' src={profilePic} alt="" />
+                            <img className='' src={user.attachment.file} alt="" />
                         </div>
                     }
                     <h1
-                        className='md:text-3xl text-xl cursor-pointer'
-                        onClick={()=>{
-                            if(setSelectedUserPosts){
-                                setSelectedUserPosts(post.username)
-                            }
-                        }}
+                        className='md:text-3xl text-xl '
+                        // onClick={()=>{
+                        //     if(setSelectedUserPosts){
+                        //         setSelectedUserPosts(user)
+                        //     }
+                        // }}
                     >
-                        {post.username}
+                        {user && user.username}
                     </h1>
                 </div>
                 <span className='text-gray-400'>{moment(post.timeStamp.toDate()).format('DD, MMM YYYY')}</span>
-                {currentUser && post.username === currentUser.email.split('@')[0] && 
+                {currentUser && post.posterId === currentUser.id && 
                     <span 
                         className='absolute right-0 text-red-500 top-0 cursor-pointer'
                         onClick={()=>handleDelete()}
@@ -143,7 +140,7 @@ const PostCard = ({post, setFeaturedImg, setPostId, setPostLikes, setSelectedUse
             </div>
             <div className='my-5 text-white flex items-center justify-center'>
                 <span className="px-5 flex items-center">
-                    {currentUser && post.likes.includes(currentUser.email.split('@')[0]) ? 
+                    {currentUser && post.likes.includes(currentUser.id) ? 
                         <motion.span initial={{scale: 1.5}} animate={{scale: 1}}>
                             <AiFillLike size='30' className='cursor-pointer' onClick={()=>handleLike()} />
                         </motion.span>

@@ -6,15 +6,16 @@ import ProgressBar from '../ProgressBar';
 const Settings = ({setOpenSettings}) => {
     
     const [bgOpacity, setBgOpacity] = useState('0');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    // const [password, setPassword] = useState('');
+    // const [showPassword, setShowPassword] = useState(false);
+    const [newUsername, setNewUsername] = useState('');
     const [errMsg, setErrMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
     const [file, setFile] = useState('');
     const [fileToUpload, setFileToUpload] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { logout, updatePasswordFunc, currentUser } = useAuth();
+    const { logout, currentUser, changeUsername } = useAuth();
 
     useEffect(()=>{
         setBgOpacity('80')
@@ -28,25 +29,25 @@ const Settings = ({setOpenSettings}) => {
         setOpenSettings(false);
     }
 
-    async function resetPassword(){
-        setSuccessMsg('')
-        setErrMsg('');
-        if(password.length < 6){
-            return setErrMsg('password must be more than 6 characters')
-        }
-        try{
-            await updatePasswordFunc(password);
-            setSuccessMsg('updated');
-        }
-        catch(err){
-            if(err.message === 'Firebase: Error (auth/requires-recent-login).'){
-                setErrMsg('this operation requires a recent login')
-            }
-            else{
-                setErrMsg('could not reset password');
-            }
-        }
-    }
+    // async function resetPassword(){
+    //     setSuccessMsg('')
+    //     setErrMsg('');
+    //     if(password.length < 6){
+    //         return setErrMsg('password must be more than 6 characters')
+    //     }
+    //     try{
+    //         await updatePasswordFunc(password);
+    //         setSuccessMsg('updated');
+    //     }
+    //     catch(err){
+    //         if(err.message === 'Firebase: Error (auth/requires-recent-login).'){
+    //             setErrMsg('this operation requires a recent login')
+    //         }
+    //         else{
+    //             setErrMsg('could not reset password');
+    //         }
+    //     }
+    // }
 
     async function handlePost(){
         setSuccessMsg('')
@@ -65,17 +66,39 @@ const Settings = ({setOpenSettings}) => {
         setLoading(false);
     }
 
+    async function handleUsernameChange(){
+        setErrMsg('')
+        if(newUsername === ''){
+            return setErrMsg('username can\'t be empty')
+        }
+        else if(newUsername.length > 15){
+            return setErrMsg('username is too long')
+        }
+
+        setLoading(true)
+        try{
+            await changeUsername(currentUser.id, newUsername);
+            setNewUsername('')
+        }   
+        catch(err){
+            setErrMsg('can\'t change username');
+            console.error(err.message);
+        }
+
+        setLoading(false)
+    }
+
     return (
         <div className={`fixed transition duration-300 w-screen h-screen z-50 bg-black top-0 left-0 bg-opacity-${bgOpacity} flex items-center justify-center`}>
             <motion.div 
-                className={`border relative bg-white rounded-lg w-96 p-5 top-0 right-0 mx-5`}
+                className={`border relative bg-white rounded-lg p-5 mx-5 w-96 `}
                 initial={{y: '-100vh'}}
                 animate={{y: '0vh'}}
             >
                 <span className='absolute top-3 right-5 cursor-pointer' onClick={()=>setOpenSettings(false)}>&#10005;</span>
                 {errMsg && <p className='text-center text-red-500'>{errMsg}</p>}
                 {successMsg && <p className='text-center text-green-400'>{successMsg}</p>}
-                <div className='border-b-2 border-black py-5'>
+                {/* <div className='border-b-2 border-black py-5'>
                     <label htmlFor="password" className='font-semibold text-lg'>Reset your Password : </label>
                     <input
                         type={showPassword ? 'text' : 'password'}
@@ -98,6 +121,19 @@ const Settings = ({setOpenSettings}) => {
                         <label htmlFor='showPassword' className='px-2 cursor-pointer'>Show Password</label>
                     </div>
                     <button onClick={()=>resetPassword()} className='mt-5 w-full border-2 border-black py-2 btn-login'>Reset Password</button>
+                </div> */}
+
+                <div className='border-b-2 border-black py-5'>
+                    <label htmlFor="password" className='font-semibold text-lg'>Change your username : </label>
+                    <input 
+                        type="text" 
+                        name='username'
+                        value={newUsername}
+                        onChange={(e)=>setNewUsername(e.target.value)}
+                        placeholder='change username' 
+                        className='w-full border-2 border-black h-10 px-3 my-3 form-input' 
+                    />
+                    <button disabled={loading} onClick={()=>handleUsernameChange()} className='mt-5 w-full border-2 border-black py-2 btn-login'>Submit Username</button>
                 </div>
 
                 {/*  */}
@@ -112,7 +148,15 @@ const Settings = ({setOpenSettings}) => {
                         <button disabled={loading} onClick={()=>handlePost()} className='w-full max-w-sm border-2 border-black btn-login py-2'>Upload Profile picture</button>
                     </div>
                     <div className='w-full'>
-                        {fileToUpload && <ProgressBar userId={currentUser.uid} setNewPost={setOpenSettings} file={fileToUpload} username={currentUser.email.split('@')[0]} setFileToUpload={setFileToUpload} setFile={setFile} path='profile-pictures' />}
+                        {fileToUpload && <ProgressBar 
+                            userId={currentUser.id} 
+                            setNewPost={setOpenSettings} 
+                            file={fileToUpload} 
+                            username={currentUser.email.split('@')[0]}
+                            setFileToUpload={setFileToUpload} 
+                            setFile={setFile} 
+                            path='profile-pictures' 
+                        />}
                     </div>
                 </div>
 

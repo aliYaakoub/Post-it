@@ -35,7 +35,7 @@ const NewPost = ({setNewPost}) => {
                 setFileToUpload(file) 
             }
             else if(!file){
-                await postContent(currentUser.email.split('@')[0], content);
+                await postContent(currentUser.id, content);
                 setContent('')
                 setNewPost(false);
             }
@@ -67,7 +67,19 @@ const NewPost = ({setNewPost}) => {
                         <p className='px-5'>{file ? file.name : 'select a file to upload'}</p>
                     </label>
                     <div className='w-full'>
-                        {fileToUpload && <ProgressBar type={type} setNewPost={setNewPost} file={fileToUpload} username={currentUser.email.split('@')[0]} content={content} setFileToUpload={setFileToUpload} setFile={setFile} path='posts' />}
+                        {fileToUpload && 
+                            <ProgressBar 
+                                type={type} 
+                                setNewPost={setNewPost} 
+                                file={fileToUpload} 
+                                posterId={currentUser.id} 
+                                // id={currentUser.id}
+                                content={content} 
+                                setFileToUpload={setFileToUpload} 
+                                setFile={setFile} 
+                                path='posts' 
+                            />
+                        }
                     </div>
                 </div>
                 {errMsg && <p className='text-center text-red-500'>{errMsg}</p>}

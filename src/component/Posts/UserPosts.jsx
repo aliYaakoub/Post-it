@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import Comments from '../Comments';
 import Likes from '../Likes';
 
-const UserPosts = ({usernameFilter: username, setSelectedUserPosts = false}) => {
+const UserPosts = ({usernameFilter: userId, setSelectedUserPosts = false}) => {
 
     const [posts, setPosts] = useState([]);
     const [max, setMax] = useState(null);
@@ -17,7 +17,7 @@ const UserPosts = ({usernameFilter: username, setSelectedUserPosts = false}) => 
     const [postId, setPostId] = useState('');
     const [postLikes, setPostLikes] = useState([]);
 
-    const { docs } =  useFirestoreBySearch('posts', username);
+    const { docs } =  useFirestoreBySearch('posts', userId);
 
     useEffect(()=>{
         setPosts(docs)
