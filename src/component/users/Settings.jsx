@@ -15,7 +15,7 @@ const Settings = ({setOpenSettings}) => {
     const [fileToUpload, setFileToUpload] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { logout, currentUser, changeUsername } = useAuth();
+    const { logout, currentUser, changeUsername, setChanges } = useAuth();
 
     useEffect(()=>{
         setBgOpacity('80')
@@ -79,6 +79,7 @@ const Settings = ({setOpenSettings}) => {
         try{
             await changeUsername(currentUser.id, newUsername);
             setNewUsername('')
+            setChanges(old => old + 1 );
         }   
         catch(err){
             setErrMsg('can\'t change username');

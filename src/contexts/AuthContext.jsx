@@ -23,6 +23,7 @@ export function AuthProvider({children}) {
 
     const [currentUser, setCurrentUser] = useState(null)
     const [loading, setLoading] = useState(true);
+    const [changes, setChanges] = useState(0)
 
     async function signup(email, password){
         await createUserWithEmailAndPassword(auth, email, password);
@@ -129,7 +130,7 @@ export function AuthProvider({children}) {
             }
         })
         return unsub;
-    }, [])
+    }, [changes])
 
     const value = {
         currentUser: loading ? null : currentUser,
@@ -146,6 +147,7 @@ export function AuthProvider({children}) {
         likePost,
         changeUsername,
         getUserData,
+        setChanges
     }
 
     return (
